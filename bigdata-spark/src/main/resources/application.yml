@@ -1,0 +1,12 @@
+server:
+  port: 8090  #ÅäÖÃ¶Ë¿Ú
+  session-timeout: 30
+  tomcat.max-threads: 0
+  tomcat.uri-encoding: UTF-8
+
+spring:
+  datasource:  #Êı¾İ¿âÅäÖÃ
+    url : jdbc:mysql://localhost:3306/newbirds
+    username : root
+    password : mymysql
+    driverClassName : com.mysql.jdbc.Driver

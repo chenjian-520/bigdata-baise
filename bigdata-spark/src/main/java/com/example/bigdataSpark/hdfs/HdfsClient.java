@@ -121,7 +121,7 @@ public final class HdfsClient {
      * 初始化
      */
     private static void init() {
-        try (InputStream propsFile = HdfsClient.class.getResource("hdfs-client,properties").openStream()) {
+        try (InputStream propsFile = HdfsClient.class.getResource("hdfs-client.properties").openStream()) {
             props.load(new InputStreamReader(propsFile, StandardCharsets.UTF_8));
         } catch (IOException e) {
             LOGGER.error("hdfs-client init  error! ");

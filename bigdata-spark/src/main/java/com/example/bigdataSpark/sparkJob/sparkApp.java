@@ -3,6 +3,8 @@ package com.example.bigdataSpark.sparkJob;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import com.example.bigdataSpark.mysql.PermissionManager;
+import com.example.bigdataSpark.mysql.entity.RDBConnetInfo;
 import com.example.bigdataSpark.sparkJob.service.sparkService;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -13,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Serializable;
 
+import java.util.Map;
+
 public class sparkApp implements Serializable {
     private  static  final Logger DEBUG_LOGGER= LoggerFactory.getLogger(sparkApp.class);
 
@@ -21,6 +25,14 @@ public class sparkApp implements Serializable {
      public static CollectionAccumulator<JavaSparkContext> contextBroadCast;
 
      public static Broadcast<JSONObject> appParamBroadcast;
+
+    private static final Logger log = LoggerFactory.getLogger(sparkApp.class);
+
+    private static Broadcast<Map<String, RDBConnetInfo>> rdbConnet;
+
+    public static PermissionManager permissionManager;
+
+    public static Broadcast<PermissionManager> permissionBroadcast;
 
      public static void main(String[] args) throws Exception{
          //获取arg参数
@@ -43,9 +55,13 @@ public class sparkApp implements Serializable {
              sessionBroadcast =sparkContext.collectionAccumulator("sparksession");
              sessionBroadcast.add(sparkSession);
 
+             permissionManager = (PermissionManager)Class.forName("com.example.bigdataSpark.mysql.ProdPermissionManager").newInstance();
+             permissionBroadcast = javaSparkContext.broadcast(permissionManager);
+             log.info("SparkSDK==LOG==获取rdb连接配置成功!");
+
              Class<?> serviceclazz =Class.forName(appParam.getString("sericeName"));
              sparkService sparkservice =(sparkService) serviceclazz.newInstance();
-             sparkservice.execute();
+             sparkservice.execute(appParam);
 
          }finally {
              if(sparkContext !=null){
@@ -56,5 +72,13 @@ public class sparkApp implements Serializable {
              }
          }
      }
+
+     public static SparkSession getSession(){
+         return sessionBroadcast.value().get(0);
+     }
+
+    public static PermissionManager getDpPermissionManager() {
+        return (PermissionManager)permissionBroadcast.value();
+    }
 
 }

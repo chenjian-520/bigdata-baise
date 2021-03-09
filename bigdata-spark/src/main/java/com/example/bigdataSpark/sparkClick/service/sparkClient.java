@@ -46,7 +46,7 @@ public class sparkClient {
     /**
      * 启动sparkApp
      * */
-    public static String startSparkApp(String appName,String json,Function<sparkResult,Void> callback) throws IOException {
+    public static String startSparkApp(String appName,String json,Function<sparkResult,Void> callback) throws IOException, InterruptedException {
        //日志输出
         logger.info("startSparkApp.Appname",appName);
         HashMap env = new HashMap();
@@ -61,7 +61,7 @@ public class sparkClient {
                 .setMaster(prop.getProperty("master"))
                 .setDeployMode(prop.getProperty("deployMode"))
                 .setPropertiesFile(prop.getProperty("propertiesFile"))
-                //.setVerbose(prop.getProperty("verbose"))
+                .setVerbose(Boolean.parseBoolean(prop.getProperty("verbose")))
                 .addAppArgs(new String[] {json});
 
 
@@ -90,13 +90,13 @@ public class sparkClient {
 
         System.out.println("The task is executing, please wait ....");
         //线程等待任务结束
-       // countDownLatch.await();
+        countDownLatch.await();
         System.out.println("The task is finished!");
         return handle.getAppId();
     }
 
     private static void init(){
-        try(InputStream propFile = sparkClient.class.getResource("sparkclient.properties").openStream()) {
+        try(InputStream propFile = sparkClient.class.getResource("spark-client.properties").openStream()) {
                    prop.load(new InputStreamReader(propFile, StandardCharsets.UTF_8));
         }catch(IOException e){
             logger.error("spark client init exception");

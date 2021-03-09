@@ -18,21 +18,16 @@ import scala.Serializable;
 import java.util.Map;
 
 public class sparkApp implements Serializable {
-    private  static  final Logger DEBUG_LOGGER= LoggerFactory.getLogger(sparkApp.class);
 
      public static CollectionAccumulator<SparkSession> sessionBroadcast;
 
      public static CollectionAccumulator<JavaSparkContext> contextBroadCast;
 
-     public static Broadcast<JSONObject> appParamBroadcast;
+     private static final Logger log = LoggerFactory.getLogger(sparkApp.class);
 
-    private static final Logger log = LoggerFactory.getLogger(sparkApp.class);
+     public static PermissionManager permissionManager;
 
-    private static Broadcast<Map<String, RDBConnetInfo>> rdbConnet;
-
-    public static PermissionManager permissionManager;
-
-    public static Broadcast<PermissionManager> permissionBroadcast;
+     public static Broadcast<PermissionManager> permissionBroadcast;
 
      public static void main(String[] args) throws Exception{
          //获取arg参数
@@ -43,7 +38,8 @@ public class sparkApp implements Serializable {
          try{
              sparkSession = SparkSession.builder().
                      appName(appParam.getString("appName"))
-                     .master("local[*]").config("spark.serializer","org.apache.spark.serializer.krgoserializer")
+                     .master("local[*]")
+                     .config("spark.serializer","org.apache.spark.serializer.KryoSerializer")
                      .getOrCreate();
 
              sparkContext =sparkSession.sparkContext();

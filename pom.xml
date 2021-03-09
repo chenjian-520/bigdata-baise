@@ -27,6 +27,7 @@
 		<hadoop.version>2.6.5</hadoop.version>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
+		<netty.version>4.1.17.Final</netty.version>
 	</properties>
 
 	<!-- 模块说明：这里声明多个子模块 -->
@@ -68,6 +69,10 @@
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-mapreduce-client-core</artifactId>
+		</dependency>
 
 		<!--导入spark依赖 -->
 		<dependency>
@@ -85,6 +90,11 @@
 		<dependency>
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.11</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -114,6 +124,16 @@
 				<artifactId>spark-sql_2.11</artifactId>
 				<version>${spark.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.apache.spark</groupId>
+				<artifactId>spark-launcher_2.11</artifactId>
+				<version>${spark.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.spark</groupId>
+				<artifactId>spark-mllib_2.11</artifactId>
+				<version>${spark.version}</version>
+			</dependency>
 
 			<!-- lombok -->
 			<dependency>
@@ -128,6 +148,11 @@
 			</dependency>
 
 			<!-- hadoop 依赖 -->
+			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-mapreduce-client-core</artifactId>
+				<version>${hadoop.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.hadoop</groupId>
 				<artifactId>hadoop-hdfs</artifactId>
@@ -158,6 +183,13 @@
 					<exclusion> <groupId>log4j</groupId> <artifactId>log4j</artifactId> </exclusion>
 					<exclusion> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> </exclusion>
 				</exclusions>
+			</dependency>
+
+			<!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-all</artifactId>
+				 <version>${netty.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

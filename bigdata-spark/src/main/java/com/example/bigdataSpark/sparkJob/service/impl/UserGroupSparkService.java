@@ -21,9 +21,8 @@ public class UserGroupSparkService implements sparkService {
     private static Map<String, JavaRDD<String>> userRrdds = new HashMap<>();
 
     @Override
-    public <T> T execute(Map<String, Object> var1) throws Exception{
-        UserGroupSparkParam userGroupSparkParam= sparkApp.appParamBroadcast
-                .getValue().toJavaObject(UserGroupSparkParam.class);
+    public <T> T execute(Map<String, Object> var) throws Exception{
+        UserGroupSparkParam userGroupSparkParam= new UserGroupSparkParam();
 
         Map<String,Map<String,String>> inputMap =userGroupSparkParam.getInput();
         inputMap.entrySet().forEach((entry)->{

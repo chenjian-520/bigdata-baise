@@ -14,5 +14,8 @@ public interface PermissionManager {
 
     DBConnectionInfo getSqlserverInfo();
 
+    String getRootHdfsUri();
+
+    Configuration initialHdfsSecurityContext();
 }
 

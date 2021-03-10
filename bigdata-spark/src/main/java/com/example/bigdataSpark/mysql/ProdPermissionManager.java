@@ -17,17 +17,17 @@ public class ProdPermissionManager implements PermissionManager, Serializable {
 
     public DBConnectionInfo getMysqlInfo() {
         DBConnectionInfo dbConnectionInfo = new DBConnectionInfo();
-        dbConnectionInfo.setPassword("Foxconn!@34");
-        dbConnectionInfo.setUrl("jdbc:mysql://dpbusinessdb:3306/dp_ads?useSSL=false&allowMultiQueries=true");
-        dbConnectionInfo.setUsername("dp_ads");
+        dbConnectionInfo.setPassword("root");
+        dbConnectionInfo.setUrl("jdbc:mysql://127.0.0.1:3306/bigdata?useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai");
+        dbConnectionInfo.setUsername("root");
         return dbConnectionInfo;
     }
 
     public DBConnectionInfo getSqlserverInfo() {
         DBConnectionInfo dbConnectionInfo = new DBConnectionInfo();
-        dbConnectionInfo.setPassword("Foxconn!@34");
-        dbConnectionInfo.setUrl("jdbc:sqlserver://dpbusinesssqlserverdb:3000;databaseName=dp_ads;loginTimeout=90;");
-        dbConnectionInfo.setUsername("dp_ads");
+        dbConnectionInfo.setPassword("root");
+        dbConnectionInfo.setUrl("jdbc:sqlserver://127.0.0.1:3000;databaseName=bigdata;loginTimeout=90;");
+        dbConnectionInfo.setUsername("root");
         return dbConnectionInfo;
     }
 

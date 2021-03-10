@@ -51,7 +51,7 @@ public class DPMysql {
      */
     protected static JavaRDD<Row> rddRead(String dburl, String dbuser, String dbPassword, String query) {
         SparkSession sparkSession = sparkApp.getSession();
-        Dataset<Row> dataset = sparkSession.read().format("jdbc").option("url", dburl).option("driver", "com.mysql.jdbc.Driver").option("user", dbuser).option("password", dbPassword).option("query", query).load();
+        Dataset<Row> dataset = sparkSession.read().format("jdbc").option("url", dburl).option("driver", "com.mysql.cj.jdbc.Driver").option("user", dbuser).option("password", dbPassword).option("dbtable", query).load();
         return dataset.toJavaRDD();
     }
 
@@ -161,7 +161,7 @@ public class DPMysql {
     }
 
     /**
-     * 直接使用dataset写入，无法使用在海量数据
+     * 直接使用dataset写入，使用在海量数据性能较低
      */
     protected static void commonOdbcWriteBatch(final String dburl, final String dbuser, final String dbPassword, final String mysqltablename, Dataset ds) {
         StructType structType = ds.schema();

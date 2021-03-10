@@ -4,18 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import com.example.bigdataSpark.mysql.PermissionManager;
-import com.example.bigdataSpark.mysql.entity.RDBConnetInfo;
+import com.example.bigdataSpark.sparkClick.service.sparkClient;
 import com.example.bigdataSpark.sparkJob.service.sparkService;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.util.CollectionAccumulator;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Serializable;
 
-import java.util.Map;
 
 public class sparkApp implements Serializable {
 
@@ -23,18 +23,20 @@ public class sparkApp implements Serializable {
 
      public static CollectionAccumulator<JavaSparkContext> contextBroadCast;
 
-     private static final Logger log = LoggerFactory.getLogger(sparkApp.class);
-
      public static PermissionManager permissionManager;
 
      public static Broadcast<PermissionManager> permissionBroadcast;
 
      public static void main(String[] args) throws Exception{
+         Logger.getLogger("org.apache.hadoop").setLevel(Level.WARN);
+         Logger.getLogger("org.apache.spark").setLevel(Level.WARN);
+         Logger.getLogger("org.project-spark").setLevel(Level.WARN);
          //获取arg参数
          String arg=args[0];
          JSONObject appParam = JSON.parseObject(arg);
          SparkSession sparkSession =null;
          SparkContext sparkContext  =null;
+
          try{
              sparkSession = SparkSession.builder().
                      appName(appParam.getString("appName"))
@@ -53,7 +55,6 @@ public class sparkApp implements Serializable {
 
              permissionManager = (PermissionManager)Class.forName("com.example.bigdataSpark.mysql.ProdPermissionManager").newInstance();
              permissionBroadcast = javaSparkContext.broadcast(permissionManager);
-             log.info("SparkSDK==LOG==获取rdb连接配置成功!");
 
              Class<?> serviceclazz =Class.forName(appParam.getString("sericeName"));
              sparkService sparkservice =(sparkService) serviceclazz.newInstance();
@@ -70,7 +71,8 @@ public class sparkApp implements Serializable {
      }
 
      public static SparkSession getSession(){
-         return sessionBroadcast.value().get(0);
+         SparkSession sparkSession = sessionBroadcast.value().get(0);
+         return sparkSession;
      }
 
     public static PermissionManager getDpPermissionManager() {

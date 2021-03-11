@@ -4,6 +4,7 @@ import com.example.bigdataSpark.sparkJob.hdfs.HdfsClient;
 import com.example.bigdataSpark.sparkJob.sparkCore.domain.UserGroupSparkParam;
 import com.example.bigdataSpark.sparkJob.sparkCore.expression.JavaSciptExpressionEngine;
 import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.KafkaStreaming;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -147,6 +148,11 @@ public class UserGroupSparkService implements sparkService {
             default:
                 return column;
         }
+    }
+
+    @Override
+    public <T> T streaming(Map<String, Object> var1, KafkaStreaming var2) throws Exception {
+        return null;
     }
 
 }

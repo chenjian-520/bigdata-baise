@@ -1,6 +1,6 @@
 package com.example.bigdataSpark.sparkJob.hdfs;
 
-import com.example.bigdataSpark.sparkJob.mysql.PermissionManager;
+import com.example.bigdataSpark.sparkJob.common.PermissionManager;
 import com.example.bigdataSpark.sparkJob.SparkApp;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;

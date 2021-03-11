@@ -4,8 +4,11 @@ import com.example.bigdataSpark.sparkJob.hdfs.SystemFile;
 import com.example.bigdataSpark.sparkJob.mysql.DPMysql;
 import com.example.bigdataSpark.sparkJob.SparkApp;
 import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.KafkaSink;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.KafkaStreaming;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -15,6 +18,7 @@ import org.apache.spark.sql.types.StructType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class sparkDemo implements sparkService {
 
@@ -48,6 +52,14 @@ public class sparkDemo implements sparkService {
         sql.show();
         DPMysql.commonOdbcWriteBatch("user",sql);
 
+        return null;
+    }
+
+    @Override
+    public <T> T streaming(Map<String, Object> var1, KafkaStreaming kafkaStreaming) throws Exception {
+        final Broadcast kafkaProducer = SparkApp.getContext().broadcast(KafkaSink.apply(new Properties() {{
+            putAll(kafkaStreaming.getKafkaParams());
+        }}));
         return null;
     }
 }

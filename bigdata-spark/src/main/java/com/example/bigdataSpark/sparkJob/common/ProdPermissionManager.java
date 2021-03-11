@@ -1,6 +1,8 @@
-package com.example.bigdataSpark.sparkJob.mysql;
+package com.example.bigdataSpark.sparkJob.common;
 
+import com.example.bigdataSpark.sparkJob.SparkApp;
 import com.example.bigdataSpark.sparkJob.mysql.entity.DBConnectionInfo;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.domain.DPKafkaInfo;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.Serializable;
@@ -38,5 +40,12 @@ public class ProdPermissionManager implements PermissionManager, Serializable {
     public Configuration initialHdfsSecurityContext() {
         Configuration config = new Configuration();
         return config;
+    }
+
+    @Override
+    public DPKafkaInfo initialKafkaSecurityContext() {
+        DPKafkaInfo dpKafkaInfo = SparkApp.getDPKafkaInfo();
+        dpKafkaInfo.setServerUrl("127.0.0.1:9092");
+        return dpKafkaInfo;
     }
 }

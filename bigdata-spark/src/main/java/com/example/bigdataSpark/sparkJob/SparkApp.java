@@ -2,8 +2,9 @@ package com.example.bigdataSpark.sparkJob;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.bigdataSpark.sparkJob.mysql.PermissionManager;
+import com.example.bigdataSpark.sparkJob.common.PermissionManager;
 import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.domain.DPKafkaInfo;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
@@ -22,6 +23,8 @@ public class SparkApp implements Serializable {
      public static PermissionManager permissionManager;
 
      public static Broadcast<PermissionManager> permissionBroadcast;
+
+    public static Broadcast<DPKafkaInfo> kafkaInfoBroadcast;
 
      public static void main(String[] args) throws Exception{
          Logger.getLogger("org.apache.hadoop").setLevel(Level.WARN);
@@ -44,12 +47,14 @@ public class SparkApp implements Serializable {
              JavaSparkContext javaSparkContext =JavaSparkContext.fromSparkContext(sparkContext);
 
              //必要广播变量
-             contextBroadCast =sparkContext.collectionAccumulator("jcontext");
+             contextBroadCast =sparkContext.collectionAccumulator("javacontext");
              contextBroadCast.add(javaSparkContext);
              sessionBroadcast =sparkContext.collectionAccumulator("sparksession");
              sessionBroadcast.add(sparkSession);
-
-             permissionManager = (PermissionManager)Class.forName("com.example.bigdataSpark.sparkJob.mysql.ProdPermissionManager").newInstance();
+             String streamingParams = appParam.getString("kafkaStreaming");
+             DPKafkaInfo dpKafkaInfo = JSON.parseObject(streamingParams, DPKafkaInfo.class);
+             kafkaInfoBroadcast = javaSparkContext.broadcast(dpKafkaInfo);
+             permissionManager = (PermissionManager)Class.forName("com.example.bigdataSpark.sparkJob.common.ProdPermissionManager").newInstance();
              permissionBroadcast = javaSparkContext.broadcast(permissionManager);
 
              Class<?> serviceclazz =Class.forName(appParam.getString("sericeName"));
@@ -70,6 +75,15 @@ public class SparkApp implements Serializable {
          SparkSession sparkSession = sessionBroadcast.value().get(0);
          return sparkSession;
      }
+
+    public static JavaSparkContext getContext() {
+        JavaSparkContext javaSparkContext = contextBroadCast.value().get(0);
+        return javaSparkContext;
+    }
+
+    public static DPKafkaInfo getDPKafkaInfo() {
+        return (DPKafkaInfo)kafkaInfoBroadcast.value();
+    }
 
     public static PermissionManager getDpPermissionManager() {
         return (PermissionManager)permissionBroadcast.value();

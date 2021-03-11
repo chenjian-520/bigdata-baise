@@ -1,4 +1,4 @@
-package com.example.bigdataSpark.sparkJob.domain;
+package com.example.bigdataSpark.sparkJob.sparkCore.domain;
 
 
 import com.hadoop.compression.lzo.LzopCodec;
@@ -10,7 +10,6 @@ import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.mapreduce.OutputCommitter;
 import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.TaskID;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ReflectionUtils;

@@ -1,4 +1,4 @@
-package com.example.bigdataSpark.sparkJob.domain;
+package com.example.bigdataSpark.sparkJob.sparkCore.domain;
 
 import scala.Serializable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.bigdataSpark.sparkJob.domain.mysqlBean;
+package com.example.bigdataSpark.sparkJob.sparkCore.domain.mysqlBean;
 
 import lombok.Data;
 import scala.Serializable;

@@ -1,7 +1,7 @@
-package com.example.bigdataSpark.hdfs;
+package com.example.bigdataSpark.sparkJob.hdfs;
 
-import com.example.bigdataSpark.mysql.PermissionManager;
-import com.example.bigdataSpark.sparkJob.sparkApp;
+import com.example.bigdataSpark.sparkJob.mysql.PermissionManager;
+import com.example.bigdataSpark.sparkJob.SparkApp;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -14,9 +14,6 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.storage.StorageLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +105,7 @@ public final class HdfsClient {
 
     //初始化hdfs文件系统作为给定用户来访问文件系统
     public static void initHDFSFileSystem(String user) throws URISyntaxException, IOException, InterruptedException {
-        PermissionManager pm = sparkApp.getDpPermissionManager();
+        PermissionManager pm = SparkApp.getDpPermissionManager();
         // 找到文件系统
         //final URI uri     ：HDFS地址
         //final Configuration conf：配置信息
@@ -135,7 +132,7 @@ public final class HdfsClient {
         JobConf jobConf = new JobConf();
         FileInputFormat.setInputPaths(jobConf, new Path(path));
         Configuration config = new Configuration();
-        JavaPairRDD<LongWritable, Text> longWritableTextJavaPairRDD = sparkApp.contextBroadCast.value().get(0)
+        JavaPairRDD<LongWritable, Text> longWritableTextJavaPairRDD = SparkApp.contextBroadCast.value().get(0)
                 .newAPIHadoopFile(path, CombineTextInputFormat.class, LongWritable.class, Text.class, config);
 
         return longWritableTextJavaPairRDD;
@@ -151,7 +148,7 @@ public final class HdfsClient {
     public static RDD<Tuple2<LongWritable,Text>> readHdfsRDD(String path,int partitions){
         JobConf jobConf = new JobConf();
         FileInputFormat.setInputPaths(jobConf,new Path(path));
-        RDD<Tuple2<LongWritable, Text>> tuple2RDD = sparkApp.sessionBroadcast.value().get(0)
+        RDD<Tuple2<LongWritable, Text>> tuple2RDD = SparkApp.sessionBroadcast.value().get(0)
                 .sparkContext()
                 .hadoopRDD(jobConf, TextInputFormat.class, LongWritable.class, Text.class, partitions);
         return tuple2RDD;

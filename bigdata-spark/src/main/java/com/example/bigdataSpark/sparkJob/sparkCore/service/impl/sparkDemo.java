@@ -1,14 +1,9 @@
-package com.example.bigdataSpark.sparkJob.service.impl;
+package com.example.bigdataSpark.sparkJob.sparkCore.service.impl;
 
-import com.example.bigdataSpark.hdfs.HdfsClient;
-import com.example.bigdataSpark.hdfs.SystemFile;
-import com.example.bigdataSpark.mysql.DPMysql;
-import com.example.bigdataSpark.sparkJob.domain.StreamingDataGzipOutputFormat;
-import com.example.bigdataSpark.sparkJob.domain.mysqlBean.User;
-import com.example.bigdataSpark.sparkJob.service.sparkService;
-import com.example.bigdataSpark.sparkJob.sparkApp;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;
+import com.example.bigdataSpark.sparkJob.hdfs.SystemFile;
+import com.example.bigdataSpark.sparkJob.mysql.DPMysql;
+import com.example.bigdataSpark.sparkJob.SparkApp;
+import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
@@ -17,12 +12,12 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class sparkDemo implements sparkService {
+
     @Override
     public <T> T execute(Map<String, Object> var) throws Exception {
         //读写本地文件
@@ -41,7 +36,7 @@ public class sparkDemo implements sparkService {
 
         JavaRDD<Row> rowJavaRDD = DPMysql.rddRead("(select * from bigdata.user where 1=1) tmp");
 
-        SparkSession session = sparkApp.getSession();
+        SparkSession session = SparkApp.getSession();
         List<StructField> fields = new ArrayList<>();
         fields.add(DataTypes.createStructField("name", DataTypes.StringType, true));
         fields.add(DataTypes.createStructField("sex", DataTypes.StringType, true));

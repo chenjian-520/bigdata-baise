@@ -1,16 +1,14 @@
-package com.example.bigdataSpark.sparkJob.service.impl;
+package com.example.bigdataSpark.sparkJob.sparkCore.service.impl;
 
-import com.example.bigdataSpark.hdfs.HdfsClient;
-import com.example.bigdataSpark.sparkJob.domain.UserGroupSparkParam;
-import com.example.bigdataSpark.sparkJob.expression.JavaSciptExpressionEngine;
-import com.example.bigdataSpark.sparkJob.service.sparkService;
-import com.example.bigdataSpark.sparkJob.sparkApp;
+import com.example.bigdataSpark.sparkJob.hdfs.HdfsClient;
+import com.example.bigdataSpark.sparkJob.sparkCore.domain.UserGroupSparkParam;
+import com.example.bigdataSpark.sparkJob.sparkCore.expression.JavaSciptExpressionEngine;
+import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.storage.StorageLevel;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,5 +1,5 @@
 
-package com.example.bigdataSpark.mysql;
+package com.example.bigdataSpark.sparkJob.mysql;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -9,11 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import com.example.bigdataSpark.mysql.entity.DBConnectionInfo;
-import com.example.bigdataSpark.mysql.entity.DlFunction;
+import com.example.bigdataSpark.sparkJob.mysql.entity.DBConnectionInfo;
+import com.example.bigdataSpark.sparkJob.mysql.entity.DlFunction;
 
-import com.example.bigdataSpark.mysql.entity.RDBConnetInfo;
-import com.example.bigdataSpark.sparkJob.sparkApp;
+import com.example.bigdataSpark.sparkJob.mysql.entity.RDBConnetInfo;
+import com.example.bigdataSpark.sparkJob.SparkApp;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.ForeachPartitionFunction;
@@ -50,7 +50,7 @@ public class DPMysql {
      * @param query      查询语句
      */
     protected static JavaRDD<Row> rddRead(String dburl, String dbuser, String dbPassword, String query) {
-        SparkSession sparkSession = sparkApp.getSession();
+        SparkSession sparkSession = SparkApp.getSession();
         Dataset<Row> dataset = sparkSession.read().format("jdbc").option("url", dburl).option("driver", "com.mysql.cj.jdbc.Driver").option("user", dbuser).option("password", dbPassword).option("dbtable", query).load();
         return dataset.toJavaRDD();
     }
@@ -60,7 +60,7 @@ public class DPMysql {
      *              查询默认db中的数据
      */
     public static JavaRDD<Row> rddRead(String query) {
-        DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+        DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
         return rddRead(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), query);
     }
 
@@ -76,7 +76,7 @@ public class DPMysql {
      * 批量插入数据到mysql，使用odbc写入，适合海量数据写入
      */
     protected static void commonOdbcWriteBatch(String dburl, String dbuser, String dbPassword, String mysqltablename, JavaRDD<Row> insertdata, HashMap<String, StructField> dbcolums, StructType rowAgeNameSchema) {
-        SparkSession sparkSession = sparkApp.getSession();
+        SparkSession sparkSession = SparkApp.getSession();
         Dataset<Row> insertdataDs = sparkSession.createDataFrame(insertdata, rowAgeNameSchema);
         insertdataDs.foreachPartition((iterator) -> {
             Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -156,7 +156,7 @@ public class DPMysql {
     }
 
     public static void commonOdbcWriteBatch(String mysqltablename, JavaRDD<Row> insertdata, HashMap<String, StructField> dbcolums, StructType rowSchema) {
-        DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+        DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
         commonOdbcWriteBatch(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), mysqltablename, insertdata, dbcolums, rowSchema);
     }
 
@@ -261,7 +261,7 @@ public class DPMysql {
     }
 
     public static void commonOdbcWriteBatch(String mysqltablename, Dataset ds) {
-        DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+        DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
         commonOdbcWriteBatch(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), mysqltablename, ds);
     }
 
@@ -284,7 +284,7 @@ public class DPMysql {
 
     public static void commonOdbcUpdateBatch(String mysqltablename, JavaRDD<Row> updateRdd, HashMap<String, StructField> dbcolums, StructType rowSchema, DlFunction<Row, String> whereFunction) throws Exception {
         if (whereFunction != null && !StringUtils.isBlank(mysqltablename)) {
-            DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+            DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
             commonOdbcUpdateBatch(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), mysqltablename, updateRdd, dbcolums, rowSchema, whereFunction);
         } else {
             throw new RuntimeException("mysql table name/where 条件回调不能为空!");
@@ -312,7 +312,7 @@ public class DPMysql {
 
     protected static void commonOdbcUpdateBatch(String dburl, String dbuser, String dbPassword, String mysqltablename, JavaRDD<Row> updateRdd, HashMap<String, StructField> dbcolums, StructType rowSchema, DlFunction<Row, String> whereFunction) throws Exception {
         if (whereFunction != null && !StringUtils.isBlank(mysqltablename)) {
-            SparkSession sparkSession = sparkApp.getSession();
+            SparkSession sparkSession = SparkApp.getSession();
             Dataset<Row> updatedataDs = sparkSession.createDataFrame(updateRdd, rowSchema);
             updatedataDs.foreachPartition((iterator) -> {
                 Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -427,7 +427,7 @@ public class DPMysql {
     }
 
     protected static void commonOdbcDeleteBatch(String dburl, String dbuser, String dbPassword, String mysqltablename, JavaRDD<Row> deleteRdd, StructType rowSchema, DlFunction<Row, String> whereFunction) throws Exception {
-        SparkSession sparkSession = sparkApp.getSession();
+        SparkSession sparkSession = SparkApp.getSession();
         Dataset<Row> insertdataDs = sparkSession.createDataFrame(deleteRdd, rowSchema);
         insertdataDs.foreachPartition((iterator) -> {
             Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -467,7 +467,7 @@ public class DPMysql {
     }
 
     public static void commonOdbcDeleteBatch(String mysqltablename, JavaRDD<Row> deleteRdd, StructType rowSchema, DlFunction<Row, String> whereFunction) throws Exception {
-        DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+        DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
         commonOdbcDeleteBatch(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), mysqltablename, deleteRdd, rowSchema, whereFunction);
     }
 
@@ -518,12 +518,12 @@ public class DPMysql {
     }
 
     public static void commonOdbcExecuteSql(List<String> sqls) throws Exception {
-        DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+        DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
         commonOdbcExecuteSql(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), sqls);
     }
 
     protected static void commonDatasetWriteBatch(String dburl, String dbuser, String dbPassword, String tablename, JavaRDD<Row> insertdata, List<StructField> fieldList, SaveMode saveMode) {
-        SparkSession sparkSession = sparkApp.getSession();
+        SparkSession sparkSession = SparkApp.getSession();
         StructType rowAgeNameSchema = DataTypes.createStructType(fieldList);
         Dataset<Row> insertdataDs = sparkSession.createDataFrame(insertdata, rowAgeNameSchema);
         Properties connectionProperties = new Properties();
@@ -533,7 +533,7 @@ public class DPMysql {
     }
 
     public static void commonDatasetWriteBatch(String tablename, JavaRDD<Row> insertdata, List<StructField> fieldList, SaveMode saveMode) {
-        DBConnectionInfo dbConnectionInfo = sparkApp.getDpPermissionManager().getMysqlInfo();
+        DBConnectionInfo dbConnectionInfo = SparkApp.getDpPermissionManager().getMysqlInfo();
         commonDatasetWriteBatch(dbConnectionInfo.getUrl(), dbConnectionInfo.getUsername(), dbConnectionInfo.getPassword(), tablename, insertdata, fieldList, saveMode);
     }
 

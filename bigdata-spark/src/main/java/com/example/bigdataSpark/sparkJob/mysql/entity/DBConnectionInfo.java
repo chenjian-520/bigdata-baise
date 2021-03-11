@@ -1,4 +1,4 @@
-package com.example.bigdataSpark.mysql.entity;
+package com.example.bigdataSpark.sparkJob.mysql.entity;
 
 import java.io.Serializable;
 

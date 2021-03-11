@@ -1,11 +1,6 @@
-package com.example.bigdataSpark.mysql;
+package com.example.bigdataSpark.sparkJob.mysql;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import com.example.bigdataSpark.mysql.entity.DBConnectionInfo;
-import com.example.bigdataSpark.mysql.entity.RDBConnetInfo;
+import com.example.bigdataSpark.sparkJob.mysql.entity.DBConnectionInfo;
 import org.apache.hadoop.conf.Configuration;
 
 public interface PermissionManager {

@@ -1,6 +1,6 @@
-package com.example.bigdataSpark.mysql;
+package com.example.bigdataSpark.sparkJob.mysql;
 
-import com.example.bigdataSpark.mysql.entity.DBConnectionInfo;
+import com.example.bigdataSpark.sparkJob.mysql.entity.DBConnectionInfo;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.Serializable;

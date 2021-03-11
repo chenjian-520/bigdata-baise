@@ -1,4 +1,4 @@
-package com.example.bigdataSpark.sparkJob.service;
+package com.example.bigdataSpark.sparkJob.sparkCore.service;
 
 import scala.Serializable;
 

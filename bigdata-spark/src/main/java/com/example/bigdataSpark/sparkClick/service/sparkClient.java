@@ -44,7 +44,7 @@ public class sparkClient {
     public static  sparkClient getInstance(){return sigle;};
 
     /**
-     * 启动sparkApp
+     * 启动SparkApp
      * */
     public static String startSparkApp(String appName,String json,Function<sparkResult,Void> callback) throws IOException, InterruptedException {
        //日志输出

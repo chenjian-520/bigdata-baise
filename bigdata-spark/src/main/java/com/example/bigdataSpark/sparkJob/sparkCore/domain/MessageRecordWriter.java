@@ -1,4 +1,4 @@
-package com.example.bigdataSpark.sparkJob.domain;
+package com.example.bigdataSpark.sparkJob.sparkCore.domain;
 
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;

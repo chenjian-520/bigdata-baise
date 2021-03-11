@@ -13,6 +13,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ReflectionUtils;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -28,7 +29,7 @@ import java.util.Iterator;
 public class StreamingDataGzipOutputFormat<K, V> extends FileOutputFormat<K, V> {
 
 
-    private StreamingDataGzipOutputFormat<K, V>.MultiRecordWriter writer;
+    private MultiRecordWriter writer;
     private String jobId;
     private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
 

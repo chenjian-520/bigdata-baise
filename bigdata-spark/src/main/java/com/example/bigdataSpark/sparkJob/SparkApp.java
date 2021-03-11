@@ -2,9 +2,6 @@ package com.example.bigdataSpark.sparkJob;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.bigdataSpark.sparkJob.common.PermissionManager;
-import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
-import com.example.bigdataSpark.sparkJob.sparkStreaming.domain.DPKafkaInfo;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
@@ -13,6 +10,10 @@ import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.util.CollectionAccumulator;
 import scala.Serializable;
+import com.example.bigdataSpark.sparkJob.common.PermissionManager;
+import com.example.bigdataSpark.sparkJob.sparkCore.service.sparkService;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.KafkaStreaming;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.domain.DPKafkaInfo;
 
 public class SparkApp implements Serializable {
 
@@ -33,6 +34,7 @@ public class SparkApp implements Serializable {
          //获取arg参数
          String arg=args[0];
          JSONObject appParam = JSON.parseObject(arg);
+         String dpType = appParam.getString("dpType");
          SparkSession sparkSession =null;
          SparkContext sparkContext  =null;
 
@@ -57,9 +59,17 @@ public class SparkApp implements Serializable {
              permissionManager = (PermissionManager)Class.forName("com.example.bigdataSpark.sparkJob.common.ProdPermissionManager").newInstance();
              permissionBroadcast = javaSparkContext.broadcast(permissionManager);
 
-             Class<?> serviceclazz =Class.forName(appParam.getString("sericeName"));
-             sparkService sparkservice =(sparkService) serviceclazz.newInstance();
-             sparkservice.execute(appParam);
+             if ("streaming".equals(dpType)) {
+                 KafkaStreaming kafkaStreaming = new KafkaStreaming();
+                 kafkaStreaming.init();
+                 Class<?> serviceclazz =Class.forName(appParam.getString("sericeName"));
+                 sparkService sparkservice =(sparkService) serviceclazz.newInstance();
+                 sparkservice.streaming(appParam, kafkaStreaming);
+             } else {
+                 Class<?> serviceclazz =Class.forName(appParam.getString("sericeName"));
+                 sparkService sparkservice =(sparkService) serviceclazz.newInstance();
+                 sparkservice.execute(appParam);
+             }
 
          }finally {
              if(sparkContext !=null){

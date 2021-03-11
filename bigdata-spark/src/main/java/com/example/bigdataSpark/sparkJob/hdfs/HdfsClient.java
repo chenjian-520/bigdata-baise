@@ -1,7 +1,6 @@
 package com.example.bigdataSpark.sparkJob.hdfs;
 
-import com.example.bigdataSpark.sparkJob.common.PermissionManager;
-import com.example.bigdataSpark.sparkJob.SparkApp;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -16,6 +15,8 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.example.bigdataSpark.sparkJob.SparkApp;
+import com.example.bigdataSpark.sparkJob.common.PermissionManager;
 
 import java.io.IOException;
 import java.io.InputStream;

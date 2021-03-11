@@ -39,6 +39,7 @@
 	<!-- 模块说明：这里声明多个子模块 -->
 	<modules>
 		<module>bigdata-spark</module>
+		<module>bigdata-sparkJob</module>
 	</modules>
 
 	<!--在此处统一加，子项目pom就可以不用引入了-->

@@ -1,7 +1,6 @@
 package com.example.bigdataSpark.sparkJob.sparkStreaming
 
 import java.util.concurrent.Future
-
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord, RecordMetadata}
 
 /**

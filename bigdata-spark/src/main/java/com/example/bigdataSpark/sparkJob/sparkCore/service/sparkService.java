@@ -1,7 +1,8 @@
 package com.example.bigdataSpark.sparkJob.sparkCore.service;
 
-import com.example.bigdataSpark.sparkJob.sparkStreaming.KafkaStreaming;
+
 import scala.Serializable;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.KafkaStreaming;
 
 import java.util.Map;
 

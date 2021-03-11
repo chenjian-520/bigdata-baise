@@ -1,14 +1,5 @@
 package com.example.bigdataSpark.sparkJob.sparkStreaming;
 
-import com.example.bigdataSpark.sparkJob.SparkApp;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
-import com.example.bigdataSpark.sparkJob.sparkStreaming.domain.DPKafkaInfo;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -19,12 +10,16 @@ import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.streaming.kafka010.CanCommitOffsets;
-import org.apache.spark.streaming.kafka010.ConsumerStrategies;
-import org.apache.spark.streaming.kafka010.HasOffsetRanges;
-import org.apache.spark.streaming.kafka010.KafkaUtils;
-import org.apache.spark.streaming.kafka010.LocationStrategies;
-import org.apache.spark.streaming.kafka010.OffsetRange;
+import org.apache.spark.streaming.kafka010.*;
+import com.example.bigdataSpark.sparkJob.SparkApp;
+import com.example.bigdataSpark.sparkJob.sparkStreaming.domain.DPKafkaInfo;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class KafkaStreaming implements Serializable {
     private Map kafkaParams;
@@ -33,7 +28,7 @@ public class KafkaStreaming implements Serializable {
     static JavaDStream<ConsumerRecord<String, Object>> windowDStream;
 
     public static final KafkaStreaming getKafkaStreaming() {
-        return KafkaStreaming.KafkaStreamingInstance.INSTANCE;
+        return KafkaStreamingInstance.INSTANCE;
     }
 
     public KafkaStreaming() {

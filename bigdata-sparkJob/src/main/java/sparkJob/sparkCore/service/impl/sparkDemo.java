@@ -1,6 +1,5 @@
 package sparkJob.sparkCore.service.impl;
 
-
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
@@ -14,7 +13,6 @@ import sparkJob.hdfs.SystemFile;
 import sparkJob.mysql.DPMysql;
 import sparkJob.sparkCore.service.sparkService;
 import sparkJob.sparkStreaming.KafkaStreaming;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +48,7 @@ public class sparkDemo implements sparkService {
         dataFrame.createOrReplaceTempView("chenjian");
         Dataset<Row> sql = session.sql("select * from chenjian");
         sql.show();
-        DPMysql.commonOdbcWriteBatch("user",sql);
+        DPMysql.commonOdbcWriteBatch("user", sql);
 
         return null;
     }

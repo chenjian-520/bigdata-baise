@@ -1,6 +1,5 @@
 package sparkJob.common;
 
-
 import org.apache.hadoop.conf.Configuration;
 import sparkJob.SparkApp;
 import sparkJob.mysql.entity.DBConnectionInfo;

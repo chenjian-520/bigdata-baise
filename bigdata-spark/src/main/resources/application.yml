@@ -1,11 +1,11 @@
 server:
-  port: 8090  #é…ç½®ç«¯å£
+  port: 8090  #ÅäÖÃ¶Ë¿Ú
   session-timeout: 30
   tomcat.max-threads: 0
   tomcat.uri-encoding: UTF-8
 
 spring:
-  datasource:  #æ•°æ®åº“é…ç½®
+  datasource:  #Êı¾İ¿âÅäÖÃ
     url : jdbc:mysql://localhost:3306/newbirds
     username : root
     password : mymysql
@@ -13,13 +13,13 @@ spring:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
     producer:
-      #è®¾ç½®å¤§äº0çš„å€¼ï¼Œåˆ™å®¢æˆ·ç«¯ä¼šå°†å‘é€å¤±è´¥çš„è®°å½•é‡æ–°å‘é€
+      #ÉèÖÃ´óÓÚ0µÄÖµ£¬Ôò¿Í»§¶Ë»á½«·¢ËÍÊ§°ÜµÄ¼ÇÂ¼ÖØĞÂ·¢ËÍ
       retries: 0
-      # æ¯æ¬¡æ‰¹é‡å‘é€æ¶ˆæ¯çš„æ•°é‡
+      # Ã¿´ÎÅúÁ¿·¢ËÍÏûÏ¢µÄÊıÁ¿
       batch-size: 5
-      # ç¼“å­˜å®¹é‡
+      # »º´æÈİÁ¿
       buffer-memory: 33554432
-      # æŒ‡å®šæ¶ˆæ¯keyå’Œæ¶ˆæ¯ä½“çš„ç¼–è§£ç æ–¹å¼ UTF-8
+      # Ö¸¶¨ÏûÏ¢keyºÍÏûÏ¢ÌåµÄ±à½âÂë·½Ê½ UTF-8
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
@@ -31,11 +31,12 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         session.timeout.ms: 15000
+
 kafka:
   topic:
-    #ä¸»é¢˜æ¶ˆè´¹åˆ†ç»„
+    #Ö÷ÌâÏû·Ñ·Ö×é
     group-id: topicGroupId
-    #è®¢é˜…çš„ä¸»é¢˜
+    #¶©ÔÄµÄÖ÷Ìâ
     topic-name:
       - topic1
       - topic2

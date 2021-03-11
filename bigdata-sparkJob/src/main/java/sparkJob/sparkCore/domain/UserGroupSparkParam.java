@@ -1,7 +1,6 @@
 package sparkJob.sparkCore.domain;
 
 import scala.Serializable;
-
 import java.util.List;
 import java.util.Map;
 

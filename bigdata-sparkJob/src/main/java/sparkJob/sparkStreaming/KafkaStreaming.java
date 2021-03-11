@@ -67,22 +67,22 @@ public class KafkaStreaming implements Serializable {
             AtomicReference<OffsetRange[]> offsetRanges = new AtomicReference();
             dStream.foreachRDD((rdd) -> {
                 if (!rdd.isEmpty()) {
-                    OffsetRange[] alloffsetRanges = ((HasOffsetRanges)rdd.rdd()).offsetRanges();
+                    OffsetRange[] alloffsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
                     offsetRanges.set(alloffsetRanges);
                 }
             });
             windowDStream.foreachRDD((rdd) -> {
                 if (!rdd.isEmpty()) {
                     streamrddConsumer.accept(rdd);
-                    ((CanCommitOffsets)dStream.inputDStream()).commitAsync((OffsetRange[])offsetRanges.get());
+                    ((CanCommitOffsets) dStream.inputDStream()).commitAsync((OffsetRange[]) offsetRanges.get());
                 }
             });
         } else {
             dStream.foreachRDD((rdd) -> {
                 if (!rdd.isEmpty()) {
                     streamrddConsumer.accept(rdd);
-                    OffsetRange[] offsetRanges = ((HasOffsetRanges)rdd.rdd()).offsetRanges();
-                    ((CanCommitOffsets)dStream.inputDStream()).commitAsync(offsetRanges);
+                    OffsetRange[] offsetRanges = ((HasOffsetRanges) rdd.rdd()).offsetRanges();
+                    ((CanCommitOffsets) dStream.inputDStream()).commitAsync(offsetRanges);
                 }
             });
         }

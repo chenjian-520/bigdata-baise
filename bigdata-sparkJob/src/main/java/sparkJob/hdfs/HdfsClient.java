@@ -1,6 +1,5 @@
 package sparkJob.hdfs;
 
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sparkJob.SparkApp;
 import sparkJob.common.PermissionManager;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

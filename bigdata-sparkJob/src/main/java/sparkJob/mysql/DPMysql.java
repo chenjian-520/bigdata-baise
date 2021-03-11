@@ -1,4 +1,3 @@
-
 package sparkJob.mysql;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +18,6 @@ import sparkJob.SparkApp;
 import sparkJob.mysql.entity.DBConnectionInfo;
 import sparkJob.mysql.entity.DlFunction;
 import sparkJob.mysql.entity.RDBConnetInfo;
-
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;

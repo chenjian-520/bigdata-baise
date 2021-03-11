@@ -1,6 +1,5 @@
 package sparkJob.sparkCore.domain;
 
-
 import com.hadoop.compression.lzo.LzopCodec;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -13,7 +12,6 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ReflectionUtils;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;

@@ -1,7 +1,6 @@
 package sparkJob.sparkCore.expression;
 
 import scala.Serializable;
-
 import javax.script.*;
 import java.util.Map;
 

@@ -1,7 +1,6 @@
 package com.ict.bigdata.spark.job.common;
 
 import com.ict.bigdata.spark.job.SparkApp;
-import com.ict.bigdata.spark.job.mysql.DPMysql;
 import com.ict.bigdata.spark.job.mysql.entity.DBConnectionInfo;
 import com.ict.bigdata.spark.job.sparkStreaming.domain.DPKafkaInfo;
 import org.apache.hadoop.conf.Configuration;
@@ -19,17 +18,18 @@ import java.util.Properties;
 public class ProdPermissionManager implements PermissionManager, Serializable {
 
     private static Properties prop;
-    private static final Logger logger = LoggerFactory.getLogger(DPMysql.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProdPermissionManager.class);
 
     public ProdPermissionManager() {
+        System.out.println(ProdPermissionManager.class.getResource(""));
         init();
     }
 
     private static void init() {
-        try (InputStream propFile = DPMysql.class.getResource("ProPermissionManager.properties").openStream()) {
+        try (InputStream propFile = ProdPermissionManager.class.getResource("ProPermissionManager.properties").openStream()) {
             prop.load(new InputStreamReader(propFile, StandardCharsets.UTF_8));
         } catch (IOException e) {
-            logger.error("mysql init exception");
+            logger.error("ProPermissionManager init exception");
         }
     }
 

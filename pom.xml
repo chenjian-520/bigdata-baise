@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>com.example</groupId>
-	<artifactId>bigdata-baise</artifactId>
+	<groupId>com.ict</groupId>
+	<artifactId>bigdata-basics</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>bigdata_baise</name>
 	<description>bigdataBaise project for Spring Boot</description>
@@ -20,11 +20,11 @@
 		<java.version>1.8</java.version>
 		<lombok.version>1.18.6</lombok.version>
 		<fastjson.version>1.2.58</fastjson.version>
-		<hadoop-common.version>2.6.5</hadoop-common.version>
+		<hadoop-common.version>2.10.1</hadoop-common.version>
 		<encoding>UTF-8</encoding>
 		<scala.version>2.11.12</scala.version>
 		<spark.version>2.3.0</spark.version>
-		<hadoop.version>2.6.5</hadoop.version>
+		<hadoop.version>2.10.1</hadoop.version>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 		<netty.version>4.1.17.Final</netty.version>
@@ -36,13 +36,13 @@
 		<slf4j-api.version>1.7.21</slf4j-api.version>
 	</properties>
 
-	<!-- 模块说明：这里声明多个子模块 -->
+	<!-- 模块说明:声明子模块 -->
 	<modules>
 		<module>bigdata-spark</module>
 		<module>bigdata-sparkJob</module>
 	</modules>
 
-	<!--在此处统一加，子项目pom就可以不用引入了-->
+	<!-- 在此处统一加 -->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputCommitter;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.ReflectionUtils;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -65,7 +66,7 @@ public class StreamingDataGzipOutputFormat<K, V> extends FileOutputFormat<K, V> 
     }
 
     /**
-     *   提供并发量: 批量写入数据，存在写入同一个或者不同的路径情况
+     * 提供并发量: 批量写入数据，存在写入同一个或者不同的路径情况
      */
     public class MultiRecordWriter extends RecordWriter<K, V> {
         private HashMap<String, RecordWriter<K, V>> recordWriters;
@@ -102,7 +103,7 @@ public class StreamingDataGzipOutputFormat<K, V> extends FileOutputFormat<K, V> 
             } else {
                 //20001_202002132155_1583302930630.gz
                 String[] keyStrs = StringUtils.split(keyStr, "_");
-                fileInfo[0] = (this.workPath.toString() + "/" +StringUtils.substring(keyStrs[1], 0, 10)  + "/" + keyStrs[1] + "/" + keyStrs[0]);
+                fileInfo[0] = (this.workPath.toString() + "/" + StringUtils.substring(keyStrs[1], 0, 10) + "/" + keyStrs[1] + "/" + keyStrs[0]);
                 fileInfo[1] = (keyStrs[0] + "_" + keyStrs[1]);
             }
             fileInfo[2] = (fileInfo[1] + "_" + System.currentTimeMillis());

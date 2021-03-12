@@ -43,10 +43,10 @@ public class DPMysql {
     }
 
     private static void init() {
-        try (InputStream propFile = DPMysql.class.getResource("spark-client.properties").openStream()) {
+        try (InputStream propFile = DPMysql.class.getResource("ProPermissionManager.properties").openStream()) {
             prop.load(new InputStreamReader(propFile, StandardCharsets.UTF_8));
         } catch (IOException e) {
-            logger.error("spark client init exception");
+            logger.error("mysql init exception");
         }
     }
 
@@ -60,7 +60,7 @@ public class DPMysql {
      */
     protected static JavaRDD<Row> rddRead(String dburl, String dbuser, String dbPassword, String query) {
         SparkSession sparkSession = SparkApp.getSession();
-        Dataset<Row> dataset = sparkSession.read().format("jdbc").option("url", dburl).option("driver", "com.mysql.cj.jdbc.Driver").option("user", dbuser).option("password", dbPassword).option("dbtable", query).load();
+        Dataset<Row> dataset = sparkSession.read().format("jdbc").option("url", dburl).option("driver", prop.getProperty("driver")).option("user", dbuser).option("password", dbPassword).option("dbtable", query).load();
         return dataset.toJavaRDD();
     }
 
@@ -88,7 +88,7 @@ public class DPMysql {
         SparkSession sparkSession = SparkApp.getSession();
         Dataset<Row> insertdataDs = sparkSession.createDataFrame(insertdata, rowAgeNameSchema);
         insertdataDs.foreachPartition((iterator) -> {
-            Driver mysqldriver = (Driver)Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            Driver mysqldriver = (Driver) Class.forName(prop.getProperty("driver")).newInstance();
             Properties dbpro = new Properties();
             dbpro.put("user", dbuser);
             dbpro.put("password", dbPassword);
@@ -101,8 +101,8 @@ public class DPMysql {
                 String values = "values ( ";
                 Iterator iter = dbcolums.entrySet().iterator();
 
-                while(iter.hasNext()) {
-                    Map.Entry entry = (Map.Entry)iter.next();
+                while (iter.hasNext()) {
+                    Map.Entry entry = (Map.Entry) iter.next();
                     String key = entry.getKey().toString();
                     if (!iter.hasNext()) {
                         sql = sql + key + " ) ";
@@ -117,27 +117,27 @@ public class DPMysql {
                 PreparedStatement preparedStatement = con.prepareStatement(sql);
                 AtomicInteger cout = new AtomicInteger(0);
 
-                while(iterator.hasNext()) {
-                    Row p = (Row)iterator.next();
+                while (iterator.hasNext()) {
+                    Row p = (Row) iterator.next();
                     iter = dbcolums.entrySet().iterator();
 
-                    for(int i = 0; iter.hasNext(); ++i) {
-                        Map.Entry ent = (Map.Entry)iter.next();
-                        StructField structField = (StructField)ent.getValue();
+                    for (int i = 0; iter.hasNext(); ++i) {
+                        Map.Entry ent = (Map.Entry) iter.next();
+                        StructField structField = (StructField) ent.getValue();
                         if (structField.dataType().equals(DataTypes.IntegerType)) {
-                            preparedStatement.setInt(i + 1, (Integer)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setInt(i + 1, (Integer) p.getAs(ent.getKey().toString()));
                         } else if (structField.dataType().equals(DataTypes.BooleanType)) {
-                            preparedStatement.setBoolean(i + 1, (Boolean)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setBoolean(i + 1, (Boolean) p.getAs(ent.getKey().toString()));
                         } else if (structField.dataType().equals(DataTypes.LongType)) {
-                            preparedStatement.setLong(i + 1, (Long)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setLong(i + 1, (Long) p.getAs(ent.getKey().toString()));
                         } else if (structField.dataType().equals(DataTypes.DoubleType)) {
-                            preparedStatement.setDouble(i + 1, (Double)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setDouble(i + 1, (Double) p.getAs(ent.getKey().toString()));
                         } else if (structField.dataType().equals(DataTypes.FloatType)) {
-                            preparedStatement.setFloat(i + 1, (Float)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setFloat(i + 1, (Float) p.getAs(ent.getKey().toString()));
                         } else if (structField.dataType().equals(DataTypes.ShortType)) {
-                            preparedStatement.setShort(i + 1, (Short)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setShort(i + 1, (Short) p.getAs(ent.getKey().toString()));
                         } else {
-                            preparedStatement.setString(i + 1, (String)p.getAs(ent.getKey().toString()));
+                            preparedStatement.setString(i + 1, (String) p.getAs(ent.getKey().toString()));
                         }
                     }
 
@@ -179,7 +179,7 @@ public class DPMysql {
         StructField[] var7 = structType.fields();
         int var8 = var7.length;
 
-        for(int var9 = 0; var9 < var8; ++var9) {
+        for (int var9 = 0; var9 < var8; ++var9) {
             StructField structField = var7[var9];
             if (!"rowkey".equals(structField.name())) {
                 fields.put(structField.name(), structField.dataType());
@@ -188,7 +188,7 @@ public class DPMysql {
 
         ds.foreachPartition(new ForeachPartitionFunction() {
             public void call(Iterator iterator) throws Exception {
-                Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+                Driver mysqldriver = (Driver) Class.forName(prop.getProperty("driver")).newInstance();
                 Properties dbpro = new Properties();
                 dbpro.put("user", dbuser);
                 dbpro.put("password", dbPassword);
@@ -201,8 +201,8 @@ public class DPMysql {
                     String values = "values ( ";
                     Iterator iter = fields.entrySet().iterator();
 
-                    while(iter.hasNext()) {
-                        Map.Entry entryx = (Map.Entry)iter.next();
+                    while (iter.hasNext()) {
+                        Map.Entry entryx = (Map.Entry) iter.next();
                         String key = entryx.getKey().toString();
                         if (!iter.hasNext()) {
                             sql = sql + key + " ) ";
@@ -217,29 +217,29 @@ public class DPMysql {
                     PreparedStatement preparedStatement = con.prepareStatement(sql);
                     AtomicInteger cout = new AtomicInteger(0);
 
-                    while(iterator.hasNext()) {
+                    while (iterator.hasNext()) {
                         int i = 0;
-                        GenericRowWithSchema genericRowWithSchema = (GenericRowWithSchema)iterator.next();
+                        GenericRowWithSchema genericRowWithSchema = (GenericRowWithSchema) iterator.next();
                         Iterator var12 = fields.entrySet().iterator();
 
-                        while(var12.hasNext()) {
-                            Map.Entry entry = (Map.Entry)var12.next();
+                        while (var12.hasNext()) {
+                            Map.Entry entry = (Map.Entry) var12.next();
 
                             try {
-                                if (((DataType)entry.getValue()).equals(DataTypes.IntegerType)) {
-                                    preparedStatement.setInt(i + 1, (Integer)genericRowWithSchema.getAs((String)entry.getKey()));
-                                } else if (((DataType)entry.getValue()).equals(DataTypes.BooleanType)) {
-                                    preparedStatement.setBoolean(i + 1, (Boolean)genericRowWithSchema.getAs((String)entry.getKey()));
-                                } else if (((DataType)entry.getValue()).equals(DataTypes.LongType)) {
-                                    preparedStatement.setLong(i + 1, (Long)genericRowWithSchema.getAs((String)entry.getKey()));
-                                } else if (((DataType)entry.getValue()).equals(DataTypes.DoubleType)) {
-                                    preparedStatement.setDouble(i + 1, (Double)genericRowWithSchema.getAs((String)entry.getKey()));
-                                } else if (((DataType)entry.getValue()).equals(DataTypes.FloatType)) {
-                                    preparedStatement.setFloat(i + 1, (Float)genericRowWithSchema.getAs((String)entry.getKey()));
-                                } else if (((DataType)entry.getValue()).equals(DataTypes.ShortType)) {
-                                    preparedStatement.setShort(i + 1, (Short)genericRowWithSchema.getAs((String)entry.getKey()));
+                                if (((DataType) entry.getValue()).equals(DataTypes.IntegerType)) {
+                                    preparedStatement.setInt(i + 1, (Integer) genericRowWithSchema.getAs((String) entry.getKey()));
+                                } else if (((DataType) entry.getValue()).equals(DataTypes.BooleanType)) {
+                                    preparedStatement.setBoolean(i + 1, (Boolean) genericRowWithSchema.getAs((String) entry.getKey()));
+                                } else if (((DataType) entry.getValue()).equals(DataTypes.LongType)) {
+                                    preparedStatement.setLong(i + 1, (Long) genericRowWithSchema.getAs((String) entry.getKey()));
+                                } else if (((DataType) entry.getValue()).equals(DataTypes.DoubleType)) {
+                                    preparedStatement.setDouble(i + 1, (Double) genericRowWithSchema.getAs((String) entry.getKey()));
+                                } else if (((DataType) entry.getValue()).equals(DataTypes.FloatType)) {
+                                    preparedStatement.setFloat(i + 1, (Float) genericRowWithSchema.getAs((String) entry.getKey()));
+                                } else if (((DataType) entry.getValue()).equals(DataTypes.ShortType)) {
+                                    preparedStatement.setShort(i + 1, (Short) genericRowWithSchema.getAs((String) entry.getKey()));
                                 } else {
-                                    preparedStatement.setString(i + 1, genericRowWithSchema.getAs((String)entry.getKey()).toString());
+                                    preparedStatement.setString(i + 1, genericRowWithSchema.getAs((String) entry.getKey()).toString());
                                 }
 
                                 ++i;
@@ -326,7 +326,7 @@ public class DPMysql {
             SparkSession sparkSession = SparkApp.getSession();
             Dataset<Row> updatedataDs = sparkSession.createDataFrame(updateRdd, rowSchema);
             updatedataDs.foreachPartition((iterator) -> {
-                Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+                Driver mysqldriver = (Driver) Class.forName(prop.getProperty("driver")).newInstance();
                 Properties dbpro = new Properties();
                 dbpro.put("user", dbuser);
                 dbpro.put("password", dbPassword);
@@ -341,15 +341,15 @@ public class DPMysql {
                     } else {
                         con.setAutoCommit(false);
 
-                        while(iterator.hasNext()) {
-                            Row p = (Row)iterator.next();
+                        while (iterator.hasNext()) {
+                            Row p = (Row) iterator.next();
                             StringBuilder sqlBuilder = new StringBuilder("UPDATE " + mysqltablename + " set ");
                             Iterator iter = dbcolums.entrySet().iterator();
 
-                            while(iter.hasNext()) {
-                                Map.Entry entry = (Map.Entry)iter.next();
+                            while (iter.hasNext()) {
+                                Map.Entry entry = (Map.Entry) iter.next();
                                 String key = entry.getKey().toString();
-                                StructField structField = (StructField)entry.getValue();
+                                StructField structField = (StructField) entry.getValue();
                                 String rddkey;
                                 Integer dvxxxxx;
                                 Boolean dv;
@@ -380,7 +380,7 @@ public class DPMysql {
                                         sqlBuilder.append("'" + dvxxxx + "'");
                                     }
 
-                                    sqlBuilder.append("  where " + (String)whereFunction.apply(p));
+                                    sqlBuilder.append("  where " + (String) whereFunction.apply(p));
                                 } else {
                                     key = entry.getKey().toString();
                                     sqlBuilder.append("`" + key + "`=");
@@ -442,7 +442,7 @@ public class DPMysql {
         SparkSession sparkSession = SparkApp.getSession();
         Dataset<Row> insertdataDs = sparkSession.createDataFrame(deleteRdd, rowSchema);
         insertdataDs.foreachPartition((iterator) -> {
-            Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Driver mysqldriver = (Driver) Class.forName(prop.getProperty("driver")).newInstance();
             Properties dbpro = new Properties();
             dbpro.put("user", dbuser);
             dbpro.put("password", dbPassword);
@@ -458,9 +458,9 @@ public class DPMysql {
                     con.setAutoCommit(false);
                     StringBuilder sqlBuilder = new StringBuilder(" DELETE FROM " + mysqltablename + " ");
 
-                    while(iterator.hasNext()) {
-                        Row p = (Row)iterator.next();
-                        sqlBuilder.append("  where " + (String)whereFunction.apply(p));
+                    while (iterator.hasNext()) {
+                        Row p = (Row) iterator.next();
+                        sqlBuilder.append("  where " + (String) whereFunction.apply(p));
                         statement.addBatch(sqlBuilder.toString());
                         logger.info("===删除的sql为=====" + sqlBuilder.toString());
                     }
@@ -472,7 +472,7 @@ public class DPMysql {
                 }
             } catch (Exception var16) {
                 logger.error("sql server connect error:" + var16.getMessage(), var16);
-             } finally {
+            } finally {
                 con.close();
             }
 
@@ -493,7 +493,7 @@ public class DPMysql {
     }
 
     protected static void commonOdbcExecuteSql(String dburl, String dbuser, String dbPassword, List<String> sqls) throws Exception {
-        Driver mysqldriver = (Driver)Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Driver mysqldriver = (Driver) Class.forName(prop.getProperty("driver")).newInstance();
         Properties dbpro = new Properties();
         dbpro.put("user", dbuser);
         dbpro.put("password", dbPassword);
@@ -504,8 +504,8 @@ public class DPMysql {
             Statement statement = con.createStatement();
             Iterator var9 = sqls.iterator();
 
-            while(var9.hasNext()) {
-                String sql = (String)var9.next();
+            while (var9.hasNext()) {
+                String sql = (String) var9.next();
                 statement.addBatch(sql);
             }
 

@@ -8,8 +8,6 @@ public interface PermissionManager {
 
     DBConnectionInfo getMysqlInfo();
 
-    DBConnectionInfo getSqlserverInfo();
-
     String getRootHdfsUri();
 
     Configuration initialHdfsSecurityContext();

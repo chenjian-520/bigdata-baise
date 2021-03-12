@@ -1,6 +1,7 @@
 package com.ict.bigdata.spark.job.sparkCore.domain;
 
 import scala.Serializable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,15 +10,15 @@ public class UserGroupSparkParam implements Serializable {
 
     private String groupName;
 
-    private Map<String,String> output;
+    private Map<String, String> output;
 
-    private Map<String,Map<String,String>> input;
+    private Map<String, Map<String, String>> input;
 
-    private Map<String,String> variables;
+    private Map<String, String> variables;
 
-    private Map<String, List<Map<String,String>>> columns;
+    private Map<String, List<Map<String, String>>> columns;
 
-    private Map<String,List<Map<String,String>>> rules;
+    private Map<String, List<Map<String, String>>> rules;
 
     public String getGroupId() {
         return groupId;

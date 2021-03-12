@@ -20,6 +20,7 @@ public class KafkaService {
 
     /**
      * 注入KafkaTemplate
+     *
      * @param kafkaTemplate kafka模版类
      */
     @Autowired
@@ -48,7 +49,7 @@ public class KafkaService {
 
             @Override
             public void onSuccess(SendResult<Integer, String> result) {
-                LOG.info("kafka sendMessage success topic = {}, data = {}",topic, data);
+                LOG.info("kafka sendMessage success topic = {}, data = {}", topic, data);
             }
         });
         LOG.info("kafka sendMessage end");

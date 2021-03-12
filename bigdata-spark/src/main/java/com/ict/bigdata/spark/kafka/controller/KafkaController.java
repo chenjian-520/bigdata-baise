@@ -14,7 +14,7 @@ public class KafkaController {
     private KafkaService kafkaService;
 
     @RequestMapping(value = "/{topic}/send", method = RequestMethod.GET)
-    public void sendMeessageTotopic1(@PathVariable String topic) {
+    public void sendMessageTopic(@PathVariable String topic) {
         logger.info("start send message to {}", topic);
         kafkaService.sendMessage(topic, "hello kafka");
     }
